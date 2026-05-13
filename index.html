@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA JEFA | Mezcal Artesanal + Tienda + Inversión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #FEFAF5; color: #2C2A29; line-height: 1.5; scroll-behavior: smooth; }
+        h1, h2, h3, h4, .logo, .nav-links a, .btn, .hero-title { font-family: 'Playfair Display', serif; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+        header { background: rgba(255, 248, 240, 0.96); backdrop-filter: blur(2px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #EADBC6; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; flex-wrap: wrap; }
+        .logo { font-size: 1.8rem; font-weight: 700; color: #6A4A2E; }
+        .logo span { color: #B87C4A; font-size: 1.9rem; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; align-items: center; }
+        .nav-links a { text-decoration: none; font-weight: 500; color: #4A3B2C; transition: 0.2s; }
+        .nav-links a:hover { color: #B87C4A; border-bottom: 2px solid #B87C4A; padding-bottom: 4px; }
+        .cart-icon { position: relative; cursor: pointer; font-size: 1.4rem; margin-left: 0.5rem; }
+        .cart-count { position: absolute; top: -8px; right: -12px; background: #B87C4A; color: white; font-size: 0.7rem; border-radius: 50%; padding: 0.2rem 0.5rem; }
+        .btn { display: inline-block; background-color: #8B5A2B; color: white; padding: 0.8rem 1.8rem; border-radius: 40px; text-decoration: none; font-weight: 600; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-outline { background: transparent; border: 2px solid #8B5A2B; color: #8B5A2B; }
+        .btn-outline:hover { background: #8B5A2B; color: white; }
+        .btn-small { padding: 0.4rem 1rem; font-size: 0.8rem; }
+        .btn:hover { background-color: #6A4120; transform: translateY(-2px); }
+        .hero { background: linear-gradient(rgba(30,25,20,0.65), rgba(40,32,26,0.7)), url('https://images.unsplash.com/photo-1593005513172-8c7b0a8c0f8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'); background-size: cover; background-position: center 35%; padding: 6rem 0; text-align: center; color: white; }
+        .hero-title { font-size: 3.5rem; margin-bottom: 1rem; }
+        .hero-sub { font-size: 1.2rem; max-width: 680px; margin: 0 auto 2rem; }
+        section { padding: 5rem 0; }
+        .section-title { font-size: 2.5rem; font-weight: 600; text-align: center; margin-bottom: 1rem; color: #5A3E28; }
+        .section-sub { text-align: center; max-width: 700px; margin: 0 auto 3rem auto; color: #5C5248; }
+        .grid-4, .grid-3, .grid-2 { display: grid; gap: 2rem; }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .card { background: white; border-radius: 28px; padding: 1.8rem; box-shadow: 0 12px 28px rgba(0,0,0,0.05); border: 1px solid #F0E2D4; display: flex; flex-direction: column; }
+        .product-card { text-align: center; }
+        .product-card i { font-size: 3rem; background: #F5E9DE; padding: 1rem; border-radius: 60px; width: 70px; margin: 0 auto 1rem auto; }
+        .price { font-weight: 700; color: #8B5A2B; margin: 0.5rem 0; font-size: 1.2rem; }
+        .product-description { font-size: 0.9rem; color: #5C5248; margin: 0.75rem 0; line-height: 1.4; text-align: left; }
+        .quantity-input { width: 70px; text-align: center; padding: 0.3rem; border-radius: 30px; border: 1px solid #E2D3C4; margin: 0.5rem auto; display: block; }
+        .cart-modal { display: none; position: fixed; top: 80px; right: 20px; width: 380px; max-width: 90vw; background: white; border-radius: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); z-index: 1000; padding: 1.5rem; border: 1px solid #EADBC6; }
+        .cart-modal h3 { margin-bottom: 1rem; border-bottom: 2px solid #EADBC6; padding-bottom: 0.5rem; }
+        .cart-items { max-height: 350px; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.9rem; border-bottom: 1px solid #F0E2D4; padding-bottom: 0.5rem; }
+        .cart-total { font-weight: bold; text-align: right; margin: 1rem 0; }
+        .close-cart { float: right; cursor: pointer; font-size: 1.2rem; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; }
+        footer { background: #2C241E; color: #EBDDCB; padding: 3rem 0 1.5rem; text-align: center; }
+        .social-icons a { color: #EBDDCB; margin: 0 0.8rem; font-size: 1.5rem; }
+        @media (max-width: 850px) { .hero-title { font-size: 2.5rem; } .cart-modal { width: 90vw; right: 5vw; top: 70px; } }
+        .badge { background: #E9DCCC; color: #6A4A2E; border-radius: 50px; padding: 0.2rem 1rem; font-size: 0.8rem; display: inline-block; }
+        .event-card { background: #FFF6EA; text-align: center; }
+        .event-icon { font-size: 2.5rem; color: #B87C4A; margin-bottom: 1rem; }
+        .crowd-form, .simulador-box { background: #FFF8F0; border-radius: 32px; padding: 1.8rem; margin-top: 2rem; border: 1px solid #EADBC6; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem 1rem; border-radius: 40px; border: 1px solid #E2D3C4; font-family: 'Inter', sans-serif; }
+        .result-tabla { overflow-x: auto; margin-top: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { border: 1px solid #E2D3C4; padding: 0.6rem; text-align: right; }
+        th { background: #EBDDCB; color: #4A3522; }
+        .discount-box { margin: 1rem 0; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+        .discount-box input { flex: 1; padding: 0.5rem; border-radius: 40px; border: 1px solid #E2D3C4; }
+        .progress-container { background: #E2D3C4; border-radius: 30px; height: 20px; margin: 1rem 0; overflow: hidden; }
+        .progress-bar { background: #8B5A2B; width: 0%; height: 100%; border-radius: 30px; transition: width 0.5s ease; }
+        .meta-info { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: 600; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; border-radius: 32px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .payment-option { border: 1px solid #E2D3C4; border-radius: 20px; padding: 1rem; margin-bottom: 1rem; cursor: pointer; transition: 0.2s; }
+        .payment-option:hover { background: #FFF8F0; border-color: #B87C4A; }
+        .payment-option.selected { background: #F5E9DE; border-color: #8B5A2B; }
+        .card-form { margin-top: 1rem; padding: 1rem; background: #F9F5F0; border-radius: 24px; }
+        .payment-details { margin-top: 1rem; padding: 1rem; background: #F0E8DF; border-radius: 20px; font-size: 0.9rem; }
+        .contact-input, .contact-textarea { width: 100%; margin-bottom: 1rem; padding: 0.8rem; border-radius: 40px; border: 1px solid #DCC9B6; }
+        .contact-textarea { border-radius: 28px; }
+        .ods-container { background: #E8F5E9; border-radius: 32px; padding: 2rem; margin-top: 2rem; border-left: 8px solid #2E7D32; }
+        .ods-grid { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        .ods-card { background: white; border-radius: 28px; padding: 1.5rem; flex: 1; min-width: 250px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .ods-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .proceso-img { width: 100%; border-radius: 24px; height: 200px; object-fit: cover; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">MEZCAL <span>LA JEFA</span></div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li><li><a href="#nosotros">Nosotros</a></li><li><a href="#proceso">Proceso</a></li><li><a href="#ods">ODS</a></li><li><a href="#tienda">Tienda</a></li><li><a href="#eventos">Eventos</a></li><li><a href="#crowdfunding">Crowdfunding</a></li><li><a href="#financiamiento">Inversión</a></li><li><a href="#contacto">Contacto</a></li>
+                <li><div class="cart-icon" id="cartIcon"><i class="fas fa-shopping-cart"></i><span id="cartCount" class="cart-count">0</span></div></li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<div id="cartModal" class="cart-modal"><div class="cart-modal-content"><span class="close-cart" id="closeCartBtn">&times;</span><h3><i class="fas fa-shopping-bag"></i> Tu carrito</h3><div id="cartItemsList">Carrito vacío</div><div class="discount-box"><input type="text" id="codigoDescuento" placeholder="Código"><button id="aplicarDescuentoBtn" class="btn-small">Aplicar</button></div><div id="descuentoInfo"></div><div class="cart-total" id="cartTotal">Total: $0</div><button id="checkoutBtn" class="btn btn-small">Finalizar compra</button><p style="font-size:0.7rem; margin-top:0.5rem;">Envío gratis CDMX</p></div></div>
+<div id="overlay" class="overlay"></div>
+
+<div id="paymentModal" class="modal"><div class="modal-content"><span style="float:right; cursor:pointer; font-size:1.5rem;" onclick="closePaymentModal()">&times;</span><h3>Completar aportación</h3><div id="paymentOptions"><div class="payment-option" data-method="oxxo">Depósito en OXXO / 7-Eleven</div><div class="payment-option" data-method="transfer">Transferencia bancaria</div><div class="payment-option" data-method="card">Pago con tarjeta</div></div><div id="paymentDetailsContainer"></div><button id="confirmPaymentBtn" class="btn">Confirmar pago</button></div></div>
+
+<div id="investModal" class="modal"><div class="modal-content"><span style="float:right; cursor:pointer; font-size:1.5rem;" onclick="closeInvestModal()">&times;</span><h3>Solicitar información de inversión</h3><form id="investFormModal"><div class="form-group"><input type="text" id="investNombre" placeholder="Nombre completo" required></div><div class="form-group"><input type="email" id="investEmail" placeholder="Correo electrónico" required></div><div class="form-group"><input type="tel" id="investTelefono" placeholder="Teléfono" required></div><div class="form-group"><textarea id="investMensaje" rows="3" placeholder="¿Qué tipo de inversión te interesa? (Francés, Alemán, Americano, monto aproximado)"></textarea></div><button type="submit" class="btn">Enviar solicitud</button></form></div></div>
+
+<main>
+    <section id="inicio" class="hero"><div class="container"><h1 class="hero-title">Mezcal con carácter y consciencia</h1><p class="hero-sub">100% artesanal, sostenible y hecho en Tlalpan.</p><a href="#tienda" class="btn">Comprar ahora</a></div></section>
+
+    <section id="nosotros"><div class="container"><div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;"><div><span class="badge">Legado y Sostenibilidad</span><h2 style="font-size:2rem; margin-bottom:1rem;">La esencia de LA JEFA</h2><p>En el corazón de Tlalpan, honramos las técnicas ancestrales del mezcal con un firme compromiso ecológico. <strong>Misión:</strong> Producir mezcal artesanal de alta calidad, preservando técnicas ancestrales y promoviendo prácticas sostenibles.</p><p><i class="fas fa-leaf"></i> Producción 100% artesanal, desde el agave hasta la botella.</p></div><div><img src="https://images.unsplash.com/photo-1514253401157-2a1d3c0f983a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Campo de agave" style="width:100%; border-radius:36px; object-fit:cover;"></div></div></div></section>
+
+    <section id="proceso" style="background: #FAF3EA;"><div class="container"><h2 class="section-title"><i class="fas fa-wine-bottle"></i> Proceso artesanal</h2><p class="section-sub">Desde la jima del agave hasta el embotellado, cada paso es tradición.</p><div class="grid-3"><div class="card"><img src="https://images.unsplash.com/photo-1566397282593-a63b4b241ff1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cosecha de agave" class="proceso-img"><h3>1. Cosecha</h3><p>Seleccionamos agaves maduros de cultivo sustentable, respetando los ciclos naturales.</p></div><div class="card"><img src="https://images.unsplash.com/photo-1551651005-5fbe2841fe0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Horno de piedra" class="proceso-img"><h3>2. Cocción</h3><p>Cocción en horno de piedra durante 72 horas para liberar los azúcares.</p></div><div class="card"><img src="https://images.unsplash.com/photo-1614616350257-3f28d1d9f6d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Destilación" class="proceso-img"><h3>3. Destilación</h3><p>Doble destilación en alambique de cobre para obtener un mezcal puro y suave.</p></div></div></div></section>
+
+    <section id="ods" style="background: #F1F8E9;"><div class="container"><h2 class="section-title"><i class="fas fa-globe-americas"></i> Compromiso con los Objetivos de Desarrollo Sostenible</h2><p class="section-sub">En LA JEFA creemos que el mezcal artesanal puede ser un motor de cambio social y ambiental. Por eso apoyamos activamente:</p><div class="ods-grid"><div class="ods-card"><div class="ods-icon"><i class="fas fa-briefcase" style="color:#1E88E5;"></i></div><h3>ODS 8: Trabajo decente y crecimiento económico</h3><p>Generamos empleos dignos para jóvenes de la comunidad, promoviendo el emprendimiento y la formación en técnicas tradicionales.</p></div><div class="ods-card"><div class="ods-icon"><i class="fas fa-recycle" style="color:#F9A825;"></i></div><h3>ODS 12: Producción y consumo responsables</h3><p>Proceso 100% artesanal, reducción de residuos, envases reciclados y consumo consciente.</p></div></div><img src="https://images.unsplash.com/photo-1566397282593-a63b4b241ff1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Agave sostenible" style="width:100%; border-radius:28px; margin-top:2rem;"></div></section>
+
+    <section id="tienda" style="background:#FCF6EF;"><div class="container"><h2 class="section-title"><i class="fas fa-store"></i> Tienda oficial LA JEFA</h2><p class="section-sub">Descubre cada producto con su perfil sensorial, proceso artesanal y elige tu favorito.</p><div class="grid-4" id="productosContainer"></div></div></section>
+
+    <section id="eventos" style="background:#F9F0E6;"><div class="container"><h2 class="section-title"><i class="fas fa-glass-cheers"></i> Servicios para Eventos</h2><p class="section-sub">Lleva la experiencia LA JEFA a tu celebración. Ofrecemos coctelería artesanal, barras de mezcal y mixes exclusivos para bodas, empresas y eventos privados.</p><div class="grid-3"><div class="card event-card"><i class="fas fa-cocktail event-icon"></i><h3>Barra de Mezcal Premium</h3><p class="price">Desde $4,500 MXN</p><div class="product-description">Incluye 3 variedades de mezcal, mixers orgánicos y bartender especializado. Ideal para 20-30 personas.</div><button class="btn-small" onclick="alert('Cotiza tu evento: WhatsApp +52 55 48417466')">Cotizar ahora</button></div><div class="card event-card"><i class="fas fa-margarita event-icon"></i><h3>Coctelería a la carta</h3><p class="price">$150 MXN / coctel</p><div class="product-description">Mezcalita Jefa, Ahumado Tonal, Palenque Sour. Insumos naturales.</div><button class="btn-small" onclick="alert('Personalizamos el menú. Contáctanos.')">Solicitar menú</button></div><div class="card event-card"><i class="fas fa-champagne-glasses event-icon"></i><h3>Experiencia Maridaje & Cata</h3><p class="price">$3,200 MXN</p><div class="product-description">Maridaje con chocolate artesanal, quesos de Oaxaca. Incluye kit de cata.</div><button class="btn-small" onclick="alert('Reserva tu experiencia. Cupo limitado.')">Reservar</button></div></div></div></section>
+
+    <section id="crowdfunding" style="background:#FFF8F0;"><div class="container"><h2 class="section-title"><i class="fas fa-hands-helping"></i> Hazte parte: Crowdfunding LA JEFA</h2><p class="section-sub">Elige tu nivel de apoyo, conoce las recompensas y registra tus datos para confirmar tu aportación.</p><div style="margin-bottom:2rem;"><div class="meta-info"><span>Meta: $850,000 MXN</span><span id="recaudadoDisplay">$0 MXN recaudados</span></div><div class="progress-container"><div class="progress-bar" id="progressBar"></div></div><div id="porcentajeDisplay">0% completado</div></div><div class="grid-4"><div class="card"><i class="fas fa-seedling fa-2x" style="color:#6F9E7C;"></i><h3>Nivel Agave</h3><p class="price">$500 MXN</p><div class="product-description"><strong>✓ Incluye:</strong> Agradecimiento en web, calcomanía LA JEFA, 10% descuento, certificado digital.</div></div><div class="card"><i class="fas fa-wine-bottle fa-2x" style="color:#B87C4A;"></i><h3>Nivel Maguey</h3><p class="price">$1,500 MXN</p><div class="product-description"><strong>✓ Incluye:</strong> Botella Joven edición crowdfunding, cata virtual, sticker exclusivo.</div></div><div class="card"><i class="fas fa-trophy fa-2x" style="color:#D4AF37;"></i><h3>Nivel Maestro Mezcalero</h3><p class="price">$5,000 MXN</p><div class="product-description"><strong>✓ Incluye:</strong> Pack completo (3 botellas), cata presencial para 2.</div></div><div class="card"><i class="fas fa-chart-line fa-2x" style="color:#3A7B6E;"></i><h3>Nivel Inversionista Raíz</h3><p class="price">$12,000 MXN</p><div class="product-description"><strong>✓ Incluye:</strong> Cata privada con fundador, 20% descuento vitalicio, reconocimiento.</div></div></div><div class="crowd-form"><h3>Registra tu aportación</h3><div class="form-group"><input type="text" id="crowdNombre" placeholder="Nombre completo"></div><div class="form-group"><input type="email" id="crowdEmail" placeholder="Correo electrónico"></div><div class="form-group"><input type="tel" id="crowdTelefono" placeholder="Teléfono (opcional)"></div><div class="form-group"><select id="crowdNivel"><option value="">Selecciona tu nivel</option><option value="Agave" data-monto="500">Agave - $500</option><option value="Maguey" data-monto="1500">Maguey - $1,500</option><option value="Maestro Mezcalero" data-monto="5000">Maestro - $5,000</option><option value="Inversionista Raíz" data-monto="12000">Inversionista - $12,000</option></select></div><button id="btnRegistrarAportacion" class="btn">Registrar aportación</button></div></div></section>
+
+    <section id="financiamiento" style="background:#F4EDE4;"><div class="container"><h2 class="section-title"><i class="fas fa-chart-pie"></i> Financiamiento para Inversionistas</h2><p class="section-sub">Conviértete en prestamista de LA JEFA. Ofrecemos planes de retorno con las tres metodologías clásicas de amortización. Elige tu modalidad y recibe intereses justos mientras apoyas la producción sustentable.</p><div class="grid-3"><div class="card"><i class="fas fa-euro-sign" style="font-size:2rem; color:#8B5A2B;"></i><h3>Sistema Francés</h3><p>Cuota fija mensual (capital + intereses). Ideal para flujos predecibles. Interés calculado sobre saldo deudor. Es el método más común en préstamos personales.</p></div><div class="card"><i class="fas fa-chart-line" style="font-size:2rem; color:#8B5A2B;"></i><h3>Sistema Alemán</h3><p>Cuotas decrecientes: amortización constante a capital. Menor pago de intereses a largo plazo. Recomendado si buscas reducir el costo total del financiamiento.</p></div><div class="card"><i class="fas fa-dollar-sign" style="font-size:2rem; color:#8B5A2B;"></i><h3>Sistema Americano</h3><p>Pago solo de intereses durante el plazo; al final se amortiza la totalidad del capital. Alta liquidez intermedia, útil para proyectos con retorno al término.</p></div></div><div class="simulador-box"><h3>📊 Simulador de inversión / préstamo</h3><p>Ingresa los datos y elige la modalidad. Calcularemos la tabla de pagos estimada (pagos mensuales, interés anual fijo).</p><div class="grid-3"><div><label>Monto a prestar (MXN):</label><input type="number" id="montoPrestamo" value="50000" step="5000"></div><div><label>Plazo (meses):</label><input type="number" id="plazoMeses" value="12" step="1" min="3" max="60"></div><div><label>Tasa de interés anual (%):</label><input type="number" id="tasaInteres" value="12" step="0.5" min="1" max="30"></div><div><label>Modalidad de amortización:</label><select id="modalidadPrestamo"><option value="frances">Francés (cuota fija)</option><option value="aleman">Alemán (cuota decreciente)</option><option value="americano">Americano (solo intereses + capital final)</option></select></div></div><button id="calcularBtn" class="btn">Calcular tabla de pagos</button><div id="tablaResultados" class="result-tabla"><p>Haz clic en "Calcular" para ver el desglose de cuotas, intereses y capital.</p></div><button id="solicitarInversionBtn" class="btn-outline btn">Solicitar información de inversión</button></div></div></section>
+
+    <section id="contacto" style="background:#F3EDE5;"><div class="container"><h2 class="section-title">Visítanos o contáctanos</h2><div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;"><div style="background:#E8DDD2; border-radius:32px; padding:2rem; text-align:center;"><i class="fas fa-map-marker-alt fa-3x"></i><h4>📍 Tlalpan Centro, CDMX</h4><p>Av. San Fernando 524, Col. Tlalpan<br>Tel: +52 55 4841 7466<br>Email: mezcal.lajefa43@gmail.com</p><p><small>Horario de visitas: Jueves a Domingo 12pm - 7pm</small></p></div><div><form id="contactForm"><input type="text" id="contactNombre" class="contact-input" placeholder="Nombre completo" required><input type="email" id="contactEmail" class="contact-input" placeholder="Correo electrónico" required><textarea id="contactMensaje" class="contact-textarea" rows="3" placeholder="Cuéntanos tu consulta sobre productos, eventos o inversión..."></textarea><button type="submit" class="btn" style="width:100%;">Enviar mensaje <i class="fas fa-arrow-right"></i></button></form></div></div></div></section>
+</main>
+
+<footer><div class="container"><div class="social-icons"><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-tiktok"></i></a><a href="#"><i class="fab fa-whatsapp"></i></a></div><p>&copy; 2025 MEZCAL LA JEFA — Producción artesanal y sostenible en Tlalpan, CDMX.</p><p>Preservamos técnicas ancestrales | Consumo responsable +18 | Contacto: mezcal.lajefa43@gmail.com | Tel: 55 4841 7466</p></div></footer>
+
+<script>
+    // Productos
+    const productos = [
+        { id: 1, nombre: "Mezcal Joven", precio: 650, icono: "fa-flask", descripcion: "El corazón del agave Espadín. Notas herbáceas, cítricas y un suave ahumado. 45% Alc. Vol. Botella 750 ml. Ideal para coctelería o degustación pura. Producción de lotes pequeños, sin aditivos." },
+        { id: 2, nombre: "Mezcal Reposado", precio: 850, icono: "fa-archway", descripcion: "Descanso de 6 meses en barricas de roble mexicano. Desarrolla notas de vainilla, caramelo y especias suaves. Cuerpo sedoso, final largo. Perfecto para sorber lentamente." },
+        { id: 3, nombre: "Mezcal Añejo", precio: 1150, icono: "fa-hourglass-half", descripcion: "Maduración de 14 meses en barrica de encino. Perfil complejo con recuerdos a chocolate, frutos secos y toffee. Edición limitada, cada botella numerada. Para paladares exigentes." },
+        { id: 4, nombre: "Cata presencial", precio: 490, icono: "fa-chalkboard-user", descripcion: "Experiencia guiada en nuestro palenque de Tlalpan. Degustación de 3 mezcales, explicación del proceso artesanal y maridaje con sal de gusano y naranja. Duración 1.5 hrs. Incluye copa de regalo." },
+        { id: 5, nombre: "Suscripción Club Jefa", precio: 560, icono: "fa-boxes", descripcion: "Cada 2 meses recibe una botella especial más accesorios (vaso veladora, mezcalero kit). Acceso a descuentos del 15% en tienda y catas privadas. Envío gratis en CDMX." },
+        { id: 6, nombre: "Pack Maestro (3 botellas)", precio: 2200, icono: "fa-gift", descripcion: "Edición limitada que incluye Joven + Reposado + Añejo en estuche de madera sustentable. Perfecto para regalar o para una colección completa. Ahorro de $450 MXN vs compra individual." }
+    ];
+
+    let carrito = [], descuentoActivo = { codigo: null, pct: 0 };
+    let totalRecaudado = 0, META = 850000;
+    let pendingAportacion = null, selectedMethod = null;
+
+    function cargarRecaudado() { let s = localStorage.getItem('recaudado'); totalRecaudado = s ? parseFloat(s) : 0; actualizarBarra(); }
+    function guardarRecaudado() { localStorage.setItem('recaudado', totalRecaudado); actualizarBarra(); }
+    function actualizarBarra() { let p = (totalRecaudado/META)*100; let bar = document.getElementById('progressBar'); if(bar) bar.style.width = Math.min(p,100)+'%'; let rd = document.getElementById('recaudadoDisplay'); if(rd) rd.innerText = `$${totalRecaudado.toLocaleString()} MXN recaudados`; let pd = document.getElementById('porcentajeDisplay'); if(pd) pd.innerText = p.toFixed(1)+'% completado'; }
+    function getMonto(nivel) { let m = { "Agave":500, "Maguey":1500, "Maestro Mezcalero":5000, "Inversionista Raíz":12000 }; return m[nivel]||0; }
+
+    function guardarCarrito() { localStorage.setItem('carrito', JSON.stringify(carrito)); actualizarContador(); renderCarrito(); }
+    function cargarCarrito() { let c = localStorage.getItem('carrito'); if(c) carrito = JSON.parse(c); actualizarContador(); renderCarrito(); }
+    function actualizarContador() { let total = carrito.reduce((s,i)=>s+i.cantidad,0); document.getElementById('cartCount').innerText = total; }
+    function agregarAlCarrito(id, cant) { let p = productos.find(p=>p.id===id); if(!p) return; let exist = carrito.find(i=>i.id===id); if(exist) exist.cantidad+=cant; else carrito.push({...p, cantidad:cant}); guardarCarrito(); mostrarNotif(`${p.nombre} agregado`); }
+    function eliminarDelCarrito(id) { carrito = carrito.filter(i=>i.id!==id); guardarCarrito(); }
+    function actualizarCantidad(id, nc) { if(nc<=0) eliminarDelCarrito(id); else { let i=carrito.find(i=>i.id===id); if(i) i.cantidad=nc; guardarCarrito(); } }
+    function subtotal() { return carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0); }
+    function totalConDesc() { let s=subtotal(); if(descuentoActivo.pct>0) return s*(1-descuentoActivo.pct/100); return s; }
+    function renderCarrito() {
+        let cont = document.getElementById('cartItemsList'); if(!cont) return;
+        if(carrito.length===0) { cont.innerHTML='<p>Carrito vacío</p>'; document.getElementById('cartTotal').innerText='Total: $0 MXN'; document.getElementById('descuentoInfo').innerHTML=''; return; }
+        let html=''; let sub=subtotal();
+        carrito.forEach(i=>{ let itemSub=i.precio*i.cantidad; html+=`<div class="cart-item"><div><strong>${i.nombre}</strong><br>$${i.precio} x ${i.cantidad}</div><div>$${itemSub} <button onclick="actualizarCantidad(${i.id},${i.cantidad-1})">-</button><button onclick="actualizarCantidad(${i.id},${i.cantidad+1})">+</button><button onclick="eliminarDelCarrito(${i.id})"><i class="fas fa-trash"></i></button></div></div>`; });
+        cont.innerHTML=html;
+        let total = totalConDesc();
+        if(descuentoActivo.pct>0) document.getElementById('descuentoInfo').innerHTML = `Descuento aplicado: ${descuentoActivo.pct}% (${descuentoActivo.codigo})<br>Subtotal: $${sub.toFixed(2)} MXN`;
+        else document.getElementById('descuentoInfo').innerHTML = '';
+        document.getElementById('cartTotal').innerText = `Total con descuento: $${total.toFixed(2)} MXN`;
+    }
+    function aplicarDescuento(cod) { let codes = {"BIENVENIDO10":10,"JEFA20":20}; if(codes[cod]) { descuentoActivo={codigo:cod, pct:codes[cod]}; mostrarNotif(`${cod} aplicado`); } else { descuentoActivo={codigo:null,pct:0}; mostrarNotif("Código inválido",true); } renderCarrito(); }
+    function mostrarNotif(msg, err=false) { let n=document.createElement('div'); n.innerText=msg; n.style.cssText=`position:fixed; bottom:20px; right:20px; background:${err?'#B85C4A':'#6A4120'}; color:white; padding:0.8rem 1.5rem; border-radius:40px; z-index:2100;`; document.body.appendChild(n); setTimeout(()=>n.remove(),2000); }
+    function renderProductos() {
+        let cont = document.getElementById('productosContainer'); if(!cont) return;
+        cont.innerHTML='';
+        productos.forEach(p=>{ let card=document.createElement('div'); card.className='card product-card'; card.innerHTML=`<i class="fas ${p.icono}"></i><h3>${p.nombre}</h3><div class="price">$${p.precio} MXN</div><div class="product-description">${p.descripcion}</div><input type="number" id="qty-${p.id}" class="quantity-input" value="1" min="1"><button class="btn-small" data-id="${p.id}">Agregar al carrito</button>`; cont.appendChild(card); });
+        document.querySelectorAll('#productosContainer .btn-small').forEach(b=>{ b.addEventListener('click',()=>{ let id=parseInt(b.dataset.id); let q=parseInt(document.getElementById(`qty-${id}`).value); if(isNaN(q)||q<1) q=1; agregarAlCarrito(id,q); }); });
+    }
+    function openPaymentModal() { document.getElementById('paymentModal').style.display='flex'; selectedMethod=null; document.getElementById('paymentDetailsContainer').innerHTML=''; }
+    function closePaymentModal() { document.getElementById('paymentModal').style.display='none'; }
+    document.querySelectorAll('.payment-option').forEach(opt=>{ opt.addEventListener('click',function(){ document.querySelectorAll('.payment-option').forEach(o=>o.classList.remove('selected')); this.classList.add('selected'); selectedMethod=this.getAttribute('data-method'); mostrarDetalles(); }); });
+    function mostrarDetalles() {
+        let cont = document.getElementById('paymentDetailsContainer');
+        if(selectedMethod==='oxxo') cont.innerHTML=`<div class="payment-details"><h4>📄 Ficha de pago OXXO / 7-Eleven</h4><p><strong>Referencia:</strong> ${Math.floor(Math.random()*1e9)}</p><p><strong>Monto:</strong> $${pendingAportacion.monto} MXN</p><p><strong>Línea de captura:</strong> ${Math.floor(Math.random()*1e12)}</p><p><strong>Vence en:</strong> 48 horas</p></div>`;
+        else if(selectedMethod==='transfer') cont.innerHTML=`<div class="payment-details"><h4>🏦 Datos para transferencia</h4><p><strong>Banco:</strong> BBVA / Citibanamex</p><p><strong>CLABE:</strong> 012345678901234567</p><p><strong>Cuenta:</strong> 1234567890</p><p><strong>Titular:</strong> MEZCAL LA JEFA S.A. de C.V.</p><p><strong>Referencia:</strong> APO-${Math.floor(Math.random()*10000)}</p></div>`;
+        else if(selectedMethod==='card') cont.innerHTML=`<div class="card-form"><h4>💳 Datos de tarjeta</h4><div class="form-group"><input type="text" id="cardNumber" placeholder="Número de tarjeta" maxlength="19"></div><div style="display:flex; gap:1rem;"><div class="form-group"><input type="text" id="cardExpiry" placeholder="MM/AA"></div><div class="form-group"><input type="text" id="cardCVV" placeholder="CVV" maxlength="4"></div></div><div class="form-group"><input type="text" id="cardName" placeholder="Nombre del titular"></div></div>`;
+    }
+    document.getElementById('confirmPaymentBtn').addEventListener('click',()=>{
+        if(!selectedMethod) { alert('Selecciona un método de pago'); return; }
+        let ref='';
+        if(selectedMethod==='oxxo') ref='Pago en OXXO/7-Eleven - Ficha generada';
+        else if(selectedMethod==='transfer') ref='Transferencia bancaria - Datos proporcionados';
+        else if(selectedMethod==='card') {
+            let cardNum = document.getElementById('cardNumber')?.value.trim();
+            let cardExp = document.getElementById('cardExpiry')?.value.trim();
+            let cardCVV = document.getElementById('cardCVV')?.value.trim();
+            let cardName = document.getElementById('cardName')?.value.trim();
+            if(!cardNum || !cardExp || !cardCVV || !cardName) { alert('Completa todos los datos de la tarjeta'); return; }
+            ref = `Pago con tarjeta terminación ${cardNum.slice(-4)} - Autorizado`;
+        }
+        totalRecaudado += pendingAportacion.monto;
+        guardarRecaudado();
+        let asuntoUser = `Confirmación de aportación - LA JEFA - ${pendingAportacion.nivel}`;
+        let cuerpoUser = `Hola ${pendingAportacion.nombre},\n\nGracias por tu aportación.\n- Nivel: ${pendingAportacion.nivel}\n- Monto: $${pendingAportacion.monto}\n- Método: ${selectedMethod}\n- Referencia: ${ref}\n\nTus recompensas serán enviadas.\n\nEquipo LA JEFA`;
+        let asuntoEmp = `Nueva aportación - ${pendingAportacion.nombre}`;
+        let cuerpoEmp = `Nombre: ${pendingAportacion.nombre}\nEmail: ${pendingAportacion.email}\nTeléfono: ${pendingAportacion.telefono}\nNivel: ${pendingAportacion.nivel}\nMonto: $${pendingAportacion.monto}\nMétodo: ${selectedMethod}\nReferencia: ${ref}`;
+        window.location.href = `mailto:${pendingAportacion.email}?subject=${encodeURIComponent(asuntoUser)}&body=${encodeURIComponent(cuerpoUser)}`;
+        setTimeout(() => { window.location.href = `mailto:mezcal.lajefa43@gmail.com?subject=${encodeURIComponent(asuntoEmp)}&body=${encodeURIComponent(cuerpoEmp)}`; }, 500);
+        alert(`✅ ¡Gracias ${pendingAportacion.nombre}! Se abrirán ventanas de correo para confirmar.`);
+        closePaymentModal();
+        document.getElementById('crowdNombre').value = '';
+        document.getElementById('crowdEmail').value = '';
+        document.getElementById('crowdTelefono').value = '';
+        document.getElementById('crowdNivel').value = '';
+        pendingAportacion=null; selectedMethod=null;
+    });
+    document.getElementById('btnRegistrarAportacion').addEventListener('click',()=>{
+        let nombre = document.getElementById('crowdNombre').value.trim();
+        let email = document.getElementById('crowdEmail').value.trim();
+        let telefono = document.getElementById('crowdTelefono').value.trim();
+        let nivel = document.getElementById('crowdNivel').value;
+        if(!nombre || !email || !nivel) { alert('Completa nombre, email y nivel'); return; }
+        pendingAportacion = { nombre, email, telefono, nivel, monto: getMonto(nivel) };
+        openPaymentModal();
+    });
+    function openInvestModal() { document.getElementById('investModal').style.display='flex'; }
+    function closeInvestModal() { document.getElementById('investModal').style.display='none'; }
+    document.getElementById('solicitarInversionBtn').addEventListener('click', openInvestModal);
+    const investForm = document.getElementById('investFormModal');
+    investForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let nombre = document.getElementById('investNombre').value.trim();
+        let email = document.getElementById('investEmail').value.trim();
+        let telefono = document.getElementById('investTelefono').value.trim();
+        let mensaje = document.getElementById('investMensaje').value;
+        if(!nombre || !email || !telefono) { alert('❌ Completa todos los campos obligatorios'); return; }
+        let asuntoEmp = `Solicitud de inversión - ${nombre}`;
+        let cuerpoEmp = `Nombre: ${nombre}\nEmail: ${email}\nTeléfono: ${telefono}\nMensaje: ${mensaje}`;
+        window.location.href = `mailto:mezcal.lajefa43@gmail.com?subject=${encodeURIComponent(asuntoEmp)}&body=${encodeURIComponent(cuerpoEmp)}`;
+        alert('✅ Solicitud enviada correctamente. Se abrirá su cliente de correo para completar el envío.');
+        investForm.reset();
+        closeInvestModal();
+    });
+    const contactForm = document.getElementById('contactForm');
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let nombre = document.getElementById('contactNombre').value.trim();
+        let email = document.getElementById('contactEmail').value.trim();
+        let mensaje = document.getElementById('contactMensaje').value;
+        if(!nombre || !email || !mensaje) { alert('Completa todos los campos'); return; }
+        let asunto = `Consulta desde LA JEFA - ${nombre}`;
+        let cuerpo = `Nombre: ${nombre}\nEmail: ${email}\n\nMensaje:\n${mensaje}`;
+        window.location.href = `mailto:mezcal.lajefa43@gmail.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+        alert('✅ Mensaje preparado. Se abrirá su cliente de correo para enviar la consulta.');
+        contactForm.reset();
+    });
+    document.getElementById('calcularBtn').addEventListener('click', function() {
+        let monto = parseFloat(document.getElementById('montoPrestamo').value);
+        let meses = parseInt(document.getElementById('plazoMeses').value);
+        let tasa = parseFloat(document.getElementById('tasaInteres').value);
+        let modalidad = document.getElementById('modalidadPrestamo').value;
+        if(isNaN(monto)||isNaN(meses)||isNaN(tasa)||monto<=0||meses<=0||tasa<0) { alert('Valores inválidos'); return; }
+        let tm = tasa/100/12;
+        let saldo = monto;
+        let html = `<tr><thead><tr><th>Mes</th><th>Cuota (MXN)</th><th>Interés (MXN)</th><th>Amortización (MXN)</th><th>Saldo restante (MXN)</th></tr></thead><tbody>`;
+        if(modalidad === 'frances') {
+            let cuota = (monto * tm * Math.pow(1+tm, meses)) / (Math.pow(1+tm, meses)-1);
+            for(let i=1;i<=meses;i++){
+                let interes = saldo * tm;
+                let amort = cuota - interes;
+                if(amort > saldo) amort = saldo;
+                saldo -= amort;
+                if(saldo<0) saldo=0;
+                html += `<tr><td>${i}</td><td>${cuota.toFixed(2)}<\/td><td>${interes.toFixed(2)}<\/td><td>${amort.toFixed(2)}<\/td><td>${saldo.toFixed(2)}<\/td></tr>`;
+            }
+        } else if(modalidad === 'aleman') {
+            let amortConst = monto / meses;
+            for(let i=1;i<=meses;i++){
+                let interes = saldo * tm;
+                let cuota = amortConst + interes;
+                let amort = amortConst;
+                if(i===meses) amort = saldo;
+                saldo -= amort;
+                if(saldo<0) saldo=0;
+                html += `<tr><td>${i}</td><td>${cuota.toFixed(2)}<\/td><td>${interes.toFixed(2)}<\/td><td>${amort.toFixed(2)}<\/td><td>${saldo.toFixed(2)}<\/td></tr>`;
+            }
+        } else if(modalidad === 'americano') {
+            for(let i=1;i<=meses;i++){
+                let interes = saldo * tm;
+                let cuota = interes;
+                let amort = 0;
+                if(i===meses){
+                    amort = monto;
+                    cuota = interes + monto;
+                }
+                let saldoMostrar = (i===meses) ? 0 : monto;
+                html += `<tr><td>${i}</td><td>${cuota.toFixed(2)}<\/td><td>${interes.toFixed(2)}<\/td><td>${amort.toFixed(2)}<\/td><td>${saldoMostrar.toFixed(2)}<\/td></tr>`;
+            }
+        }
+        html += `</tbody></table><p style="margin-top:1rem;"><i class="fas fa-chart-line"></i> *Simulación referencial. Los préstamos se sujetan a análisis crediticio y contrato de inversión.</p>`;
+        document.getElementById('tablaResultados').innerHTML = html;
+    });
+    function abrirCarrito() { document.getElementById('cartModal').style.display='block'; document.getElementById('overlay').style.display='block'; renderCarrito(); }
+    function cerrarCarrito() { document.getElementById('cartModal').style.display='none'; document.getElementById('overlay').style.display='none'; }
+    document.getElementById('cartIcon').addEventListener('click', abrirCarrito);
+    document.getElementById('closeCartBtn').addEventListener('click', cerrarCarrito);
+    document.getElementById('overlay').addEventListener('click', cerrarCarrito);
+    document.getElementById('checkoutBtn').addEventListener('click',()=>{ if(carrito.length===0) alert('Carrito vacío'); else if(confirm(`Total: $${totalConDesc().toFixed(2)} MXN. ¿Proceder con la simulación de compra?`)) { alert('¡Gracias! Recibirás un correo con los detalles de envío. (Demo)'); carrito=[]; descuentoActivo={codigo:null,pct:0}; guardarCarrito(); cerrarCarrito(); } });
+    document.getElementById('aplicarDescuentoBtn').addEventListener('click',()=>{ let c=document.getElementById('codigoDescuento').value.trim().toUpperCase(); aplicarDescuento(c); });
+    window.actualizarCantidad = actualizarCantidad;
+    window.eliminarDelCarrito = eliminarDelCarrito;
+    window.closeInvestModal = closeInvestModal;
+    window.closePaymentModal = closePaymentModal;
+    cargarRecaudado(); cargarCarrito(); renderProductos();
+</script>
+</body>
+</html>
